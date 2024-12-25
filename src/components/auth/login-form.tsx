@@ -1,4 +1,5 @@
 "use client";
+import { useState, useTransition } from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,8 +17,13 @@ import { CardWrapper } from "./card-wrapper";
 import { Button } from "../ui/button";
 import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
+import { login } from "@/actions/login";
+import { LoadingSpinner } from "../ui/loading-spinner";
 
 export const LoginForm = () => {
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -27,7 +33,17 @@ export const LoginForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    console.log(values);
+    setError("");
+    setSuccess("");
+    startTransition(async () => {
+      const result = await login(values);
+      if (result.error) {
+        setError(result.error);
+      }
+      if (result.success) {
+        setSuccess(result.success);
+      }
+    });
   };
   return (
     <CardWrapper
@@ -48,6 +64,7 @@ export const LoginForm = () => {
                   <FormControl>
                     <Input
                       {...field}
+                      disabled={isPending}
                       placeholder="john@example.com"
                       type="email"
                     />
@@ -67,6 +84,7 @@ export const LoginForm = () => {
                       {...field}
                       placeholder="**********"
                       type="password"
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -74,9 +92,18 @@ export const LoginForm = () => {
               )}
             />
           </div>
-          <FormError />
-          <FormSuccess message="Email Sent" />
-          <Button type="submit" className="w-full">
+          <FormError message={error} />
+          <FormSuccess message={success} />
+          <Button
+            type="submit"
+            className="relative flex w-full items-center justify-center"
+            disabled={isPending}
+          >
+            {isPending && (
+              <span className="absolute right-1/2 -translate-x-6">
+                <LoadingSpinner />
+              </span>
+            )}
             Login
           </Button>
         </form>
