@@ -1,5 +1,7 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,14 +17,16 @@ import {
 } from "@/components/ui/form";
 import { CardWrapper } from "./card-wrapper";
 import { Button } from "../ui/button";
-import { FormError } from "../form-error";
-import { FormSuccess } from "../form-success";
-import { login } from "@/actions/login";
+import { FormError } from "./form-error";
+
+import { signIn } from "next-auth/react";
 import { LoadingSpinner } from "../ui/loading-spinner";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const LoginForm = () => {
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -31,17 +35,31 @@ export const LoginForm = () => {
       password: "",
     },
   });
-
+  useEffect(() => {
+    // Check for error in URL query params
+    const urlError = searchParams.get("error");
+    if (urlError === "CredentialsSignin") {
+      setError("Invalid email or password"); // Map the error to a user-friendly message
+    }
+  }, [searchParams]);
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError("");
-    setSuccess("");
     startTransition(async () => {
-      const result = await login(values);
-      if (result.error) {
-        setError(result.error);
-      }
-      if (result.success) {
-        setSuccess(result.success);
+      try {
+        const result = await signIn("credentials", {
+          ...values,
+          redirect: false,
+        });
+        if (result?.error) {
+          setError("Invalid email or password");
+        } else {
+          const callbackUrl =
+            searchParams.get("callbackUrl") || DEFAULT_LOGIN_REDIRECT;
+          router.push(callbackUrl);
+        }
+      } catch (e) {
+        console.error(e);
+        setError("An unexpected error occurred. Please try again.");
       }
     });
   };
@@ -49,7 +67,7 @@ export const LoginForm = () => {
     <CardWrapper
       headerLabel="Welcome back"
       backButtonLabel="Don't have an account ?"
-      backButtonHref="/auth/register"
+      backButtonHref="/register"
       showSocial
     >
       <Form {...form}>
@@ -93,7 +111,7 @@ export const LoginForm = () => {
             />
           </div>
           <FormError message={error} />
-          <FormSuccess message={success} />
+
           <Button
             type="submit"
             className="relative flex w-full items-center justify-center"

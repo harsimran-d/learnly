@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/form";
 import { CardWrapper } from "./card-wrapper";
 import { Button } from "../ui/button";
-import { FormError } from "../form-error";
-import { FormSuccess } from "../form-success";
+import { FormError } from "./form-error";
+import { FormSuccess } from "./form-success";
 import { register } from "@/actions/register";
 import { LoadingSpinner } from "../ui/loading-spinner";
 
@@ -50,7 +50,7 @@ export const RegisterForm = () => {
     <CardWrapper
       headerLabel="Welcome"
       backButtonLabel="Already have an account?"
-      backButtonHref="/auth/login"
+      backButtonHref="/login"
       showSocial
     >
       <Form {...form}>
