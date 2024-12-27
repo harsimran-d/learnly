@@ -32,6 +32,9 @@ export default NextAuth(authConfig).auth((req) => {
       nextUrl.origin + "/login?callbackUrl=" + nextUrl.href,
     );
   }
+  if (isLoggedIn && nextUrl.pathname === "/") {
+    return Response.redirect(nextUrl.origin + "/dashboard");
+  }
   return undefined;
 });
 export const config = {

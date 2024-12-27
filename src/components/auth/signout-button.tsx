@@ -8,6 +8,7 @@ export default function SignoutButton() {
       onClick={() => {
         signOut();
       }}
+      variant="destructive"
     >
       Sign Out
     </Button>
