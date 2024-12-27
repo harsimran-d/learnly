@@ -1,17 +1,11 @@
-import { auth, signOut } from "@/lib/auth";
+import SignoutButton from "@/components/auth/signout-button";
+import { auth } from "@/lib/auth";
 const SettingsPage = async () => {
   const session = await auth();
   return (
     <div>
       Settings Page {JSON.stringify(session)}
-      <form
-        action={async () => {
-          "use server";
-          await signOut({ redirect: true, redirectTo: "/login" });
-        }}
-      >
-        <button type="submit">Sign Out</button>
-      </form>
+      <SignoutButton />
     </div>
   );
 };
