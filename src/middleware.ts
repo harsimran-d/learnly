@@ -28,7 +28,9 @@ export default NextAuth(authConfig).auth((req) => {
   }
 
   if (!isLoggedIn && !isPublicRoute) {
-    return Response.redirect(new URL("/login", nextUrl));
+    return Response.redirect(
+      nextUrl.origin + "/login?callbackUrl=" + nextUrl.href,
+    );
   }
   return undefined;
 });
