@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthConfig } from "next-auth";
+import NextAuth from "next-auth";
 import {
   DEFAULT_LOGIN_REDIRECT,
   apiAuthPrefix,
@@ -6,12 +6,9 @@ import {
   publicRoutes,
 } from "./routes";
 
-const typedAuthConfig = {
-  trustHost: true,
-  providers: [],
-} satisfies NextAuthConfig;
+import authConfig from "./auth.config";
 
-export default NextAuth(typedAuthConfig).auth((req) => {
+export default NextAuth(authConfig).auth((req) => {
   const { nextUrl } = req;
 
   const isLoggedIn = !!req.auth;
@@ -20,27 +17,19 @@ export default NextAuth(typedAuthConfig).auth((req) => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   if (isApiAuthRoute) {
-    console.log("middleware running in isApiAuthRoute");
     return undefined;
   }
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      console.log("middleware running in isLoggedIn");
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    console.log("middleware running in isAuthRoute");
     return undefined;
   }
 
   if (!isLoggedIn && !isPublicRoute) {
-    console.log(
-      "middleware running in is not logged in and is not public route ",
-    );
-
     return Response.redirect(new URL("/login", nextUrl));
   }
-  console.log("middleware running in the end");
   return undefined;
 });
 export const config = {
