@@ -1,5 +1,4 @@
 import Logo from "./logo";
-import SignoutButton from "@/components/auth/signout-button";
 import SidebarRoutes from "./sidebar-routes";
 
 const Sidebar = () => {
@@ -10,9 +9,6 @@ const Sidebar = () => {
       </div>
       <div className="flex w-full flex-col">
         <SidebarRoutes />
-      </div>
-      <div className="mt-auto flex justify-center p-4">
-        <SignoutButton />
       </div>
     </div>
   );

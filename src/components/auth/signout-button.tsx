@@ -9,6 +9,7 @@ export default function SignoutButton() {
         signOut();
       }}
       variant="destructive"
+      size="sm"
     >
       Sign Out
     </Button>
