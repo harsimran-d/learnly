@@ -21,7 +21,7 @@ export default {
       const customUser = user as CustomUser;
       if (user?.id) {
         token.sub = customUser.id;
-        token.role = customUser.role ?? "teacher";
+        token.role = customUser.role;
       }
       return token;
     },

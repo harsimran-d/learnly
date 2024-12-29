@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   if (!user) {
     return NextResponse.json(null, { status: 401 });
   }
-  if (user.role !== "teacher") {
+  if (user.role !== "TEACHER") {
     return NextResponse.json(
       { error: "Only teachers can create courses" },
       { status: 403 },

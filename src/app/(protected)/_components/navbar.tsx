@@ -6,7 +6,7 @@ import { CustomSession } from "@/auth.config";
 const Navbar = async () => {
   const session = (await auth()) as CustomSession;
   let isTeacher = false;
-  if (session?.user?.role == "teacher") {
+  if (session?.user?.role == "TEACHER") {
     isTeacher = true;
   }
   console.log(isTeacher);

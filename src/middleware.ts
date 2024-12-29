@@ -14,7 +14,7 @@ export default NextAuth(authConfig).auth((req) => {
   const isLoggedIn = !!req.auth;
   const user = req.auth?.user as CustomUser | undefined;
   const role = user?.role;
-  const isTeacher = role === "teacher";
+  const isTeacher = role === "TEACHER";
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
