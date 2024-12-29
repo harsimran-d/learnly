@@ -10,59 +10,118 @@ datasource db {
 enum Role {
   USER
   TEACHER
-  ADMIN
 }
 
 enum CourseStatus {
   DRAFT
   PUBLISHED
-}
-
-model Enrollment {
-  id       String @id @default(cuid())
-  userId   String
-  user     User   @relation(fields: [userId], references: [id])
-  courseId String
-  course   Course @relation(fields: [courseId], references: [id])
+  ARCHIVED
 }
 
 model User {
-  id            String       @id @default(cuid())
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  role          Role      @default(USER)
   name          String?
-  email         String       @unique
   emailVerified DateTime?
   image         String?
-  password      String
-  role          Role         @default(USER)
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  enrollements  Enrollment[]
-  courses       Course[]
+
+  Enrollements        Enrollment[]
+  Courses             Course[]
+  Payments            Payment[]
+  UserCourseProgress  UserCourseProgress[]
+  UserChapterProgress UserChapterProgress[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Course {
   id          String       @id @default(cuid())
   title       String
-  description String
-  image       String
-  price       Float
-  status CourseStatus @default(DRAFT)
-  videos Chapter[]
+  description String?
+  imageURL    String?
+  price       Float        @default(0)
+  isPublished CourseStatus @default(DRAFT)
   teacherId   String
   teacher     User         @relation(fields: [teacherId], references: [id])
+  chapters    Chapter[]
   enrollments Enrollment[]
+  payments    Payment[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+
+  UserCourseProgress UserCourseProgress[]
+
+  @@index([teacherId])
 }
 
 model Chapter {
-  id String @id @default(cuid())
-  title String
+  id          String   @id @default(cuid())
+  title       String
   description String
-  videoUrl String
-  courseId String
-  course Course @relation(fields: [courseId], references: [id])
+  videoUrl    String?
+  notionDoc   String?
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  sequence    Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  UserChapterProgress UserChapterProgress[]
+
+  @@index([courseId, sequence])
+}
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id])
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  sequence Int @default(0)
+}
+
+model Payment {
+  id         String   @id @default(cuid())
+  razorpayId String   @unique
+  amount     Float
+  currency   String
+  status     String
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  courseId   String?
+  course     Course?  @relation(fields: [courseId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([courseId])
+}
+
+model UserCourseProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  isCompleted Boolean  @default(false)
+  progress    Int      @default(0)
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, courseId])
+}
+
+model UserChapterProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  chapterId   String
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  isCompleted Boolean  @default(false)
+  progress    Int      @default(0)
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, chapterId])
 }
