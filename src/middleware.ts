@@ -14,7 +14,7 @@ export default NextAuth(authConfig).auth((req) => {
   const isLoggedIn = !!req.auth;
   const user = req.auth?.user as CustomUser | undefined;
   const role = user?.role;
-  const isTeacer = role === "teacher";
+  const isTeacher = role === "teacher";
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
@@ -40,10 +40,10 @@ export default NextAuth(authConfig).auth((req) => {
     return Response.redirect(nextUrl.origin + "/dashboard");
   }
 
-  if (isLoggedIn && isTeacer && nextUrl.pathname.startsWith("/dashboard")) {
+  if (isLoggedIn && isTeacher && nextUrl.pathname.startsWith("/dashboard")) {
     return Response.redirect(nextUrl.origin + "/teacher/courses");
   }
-  if (!isTeacer && nextUrl.pathname.startsWith("/teacher")) {
+  if (!isTeacher && nextUrl.pathname.startsWith("/teacher")) {
     return Response.redirect(nextUrl.origin + "/");
   }
 
