@@ -43,13 +43,13 @@ export const CreateCourseForm = () => {
       const result = await axios.post("/api/courses", values);
       console.log(result);
       if (result.status == 201) {
-        toast("Course created", {
+        toast.success("Course created", {
           cancel: {
             label: "X",
             onClick: () => console.log("toast canceled"),
           },
         });
-        router.push("/teacher/courses/edit/" + result.data.id);
+        router.push("/teacher/courses/" + result.data.id);
       } else {
         setError("Failed to create course");
       }
