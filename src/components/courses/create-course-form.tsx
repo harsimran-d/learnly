@@ -47,7 +47,10 @@ export const CreateCourseForm = () => {
       const result = await axios.post("/api/courses", values);
       console.log(result);
       if (result.status == 201) {
-        setSuccess("Course created successfully");
+        toast({
+          title: "Course created",
+        });
+        router.push("/teacher/courses/edit/" + result.data.id);
       } else {
         setError("Failed to create course");
       }

@@ -11,7 +11,7 @@ const Navbar = async () => {
   }
   console.log(isTeacher);
   return (
-    <div className="flex h-full items-center border-b bg-white p-4 shadow-sm">
+    <div className="flex h-full items-center border-b bg-white p-2 shadow-sm">
       <MobileSidebar />
       <NavbarRoutes />
     </div>

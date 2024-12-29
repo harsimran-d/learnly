@@ -16,7 +16,7 @@ export const MobileSidebar = () => {
       open={isSheetOpen}
       onOpenChange={(open) => (open ? openSheet() : closeSheet())}
     >
-      <SheetTrigger className="pr-4 transition hover:opacity-50 md:hidden">
+      <SheetTrigger className="transition hover:opacity-50 md:hidden">
         <Menu />
       </SheetTrigger>
       <SheetContent side="left" className="bg-white p-0">
