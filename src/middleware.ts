@@ -6,12 +6,15 @@ import {
   publicRoutes,
 } from "./routes";
 
-import authConfig from "./auth.config";
+import authConfig, { CustomUser } from "./auth.config";
 
 export default NextAuth(authConfig).auth((req) => {
   const { nextUrl } = req;
 
   const isLoggedIn = !!req.auth;
+  const user = req.auth?.user as CustomUser | undefined;
+  const role = user?.role;
+  const isTeacer = role === "teacher";
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
@@ -32,9 +35,18 @@ export default NextAuth(authConfig).auth((req) => {
       nextUrl.origin + "/login?callbackUrl=" + nextUrl.href,
     );
   }
+
   if (isLoggedIn && nextUrl.pathname === "/") {
     return Response.redirect(nextUrl.origin + "/dashboard");
   }
+
+  if (isLoggedIn && isTeacer && nextUrl.pathname.startsWith("/dashboard")) {
+    return Response.redirect(nextUrl.origin + "/teacher/courses");
+  }
+  if (!isTeacer && nextUrl.pathname.startsWith("/teacher")) {
+    return Response.redirect(nextUrl.origin + "/");
+  }
+
   return undefined;
 });
 export const config = {

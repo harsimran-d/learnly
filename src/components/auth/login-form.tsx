@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { CardWrapper } from "./card-wrapper";
 import { Button } from "../ui/button";
-import { FormError } from "./form-error";
+import { FormError } from "../form/form-error";
 
 import { signIn } from "next-auth/react";
 import { LoadingSpinner } from "../ui/loading-spinner";
@@ -49,8 +49,10 @@ export const LoginForm = () => {
         const result = await signIn("credentials", {
           ...values,
           redirect: false,
+          redirectTo: searchParams.get("callbackUrl") || DEFAULT_LOGIN_REDIRECT,
         });
         if (result?.error) {
+          console.error(result.error);
           setError("Invalid email or password");
         } else {
           const callbackUrl =

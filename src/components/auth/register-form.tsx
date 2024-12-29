@@ -1,5 +1,5 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,15 +15,14 @@ import {
 } from "@/components/ui/form";
 import { CardWrapper } from "./card-wrapper";
 import { Button } from "../ui/button";
-import { FormError } from "./form-error";
-import { FormSuccess } from "./form-success";
+import { FormError } from "../form/form-error";
+import { FormSuccess } from "../form/form-success";
 import { register } from "@/actions/register";
 import { LoadingSpinner } from "../ui/loading-spinner";
 
 export const RegisterForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -32,19 +31,17 @@ export const RegisterForm = () => {
       name: "",
     },
   });
-
-  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+  const { isSubmitting } = form.formState;
+  const onSubmit = async (values: z.infer<typeof RegisterSchema>) => {
     setError("");
     setSuccess("");
-    startTransition(async () => {
-      const result = await register(values);
-      if (result.error) {
-        setError(result.error);
-      }
-      if (result.success) {
-        setSuccess(result.success);
-      }
-    });
+    const result = await register(values);
+    if (result.error) {
+      setError(result.error);
+    }
+    if (result.success) {
+      setSuccess(result.success);
+    }
   };
   return (
     <CardWrapper
@@ -64,7 +61,7 @@ export const RegisterForm = () => {
                   <FormControl>
                     <Input
                       {...field}
-                      disabled={isPending}
+                      disabled={isSubmitting}
                       placeholder="John Doe"
                       type="text"
                     />
@@ -82,7 +79,7 @@ export const RegisterForm = () => {
                   <FormControl>
                     <Input
                       {...field}
-                      disabled={isPending}
+                      disabled={isSubmitting}
                       placeholder="john@example.com"
                       type="email"
                     />
@@ -102,7 +99,7 @@ export const RegisterForm = () => {
                       {...field}
                       placeholder="**********"
                       type="password"
-                      disabled={isPending}
+                      disabled={isSubmitting}
                     />
                   </FormControl>
                   <FormMessage />
@@ -115,9 +112,9 @@ export const RegisterForm = () => {
           <Button
             type="submit"
             className="relative flex w-full items-center justify-center"
-            disabled={isPending}
+            disabled={isSubmitting}
           >
-            {isPending && (
+            {isSubmitting && (
               <span className="absolute right-1/2 -translate-x-8">
                 <LoadingSpinner />
               </span>

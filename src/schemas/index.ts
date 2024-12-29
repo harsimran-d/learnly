@@ -18,3 +18,9 @@ export const RegisterSchema = z.object({
     message: "Name is required",
   }),
 });
+
+export const CreateCourseSchema = z.object({
+  title: z.string().refine((val) => val.trim().length > 0, {
+    message: "Title cannot be empty",
+  }),
+});

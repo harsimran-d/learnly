@@ -29,17 +29,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         if (validatedFields.success) {
           const { email, password } = validatedFields.data;
-          const currentUser = await getUserByEmail(email);
-          if (!currentUser || !currentUser.password) {
+          try {
+            const currentUser = await getUserByEmail(email);
+
+            if (!currentUser || !currentUser.password) {
+              return null;
+            }
+            const passwordsMatch = await bcrypt.compare(
+              password,
+              currentUser.password,
+            );
+            if (passwordsMatch) {
+              console.log("returning user");
+              return currentUser;
+            }
+          } catch (e) {
+            console.error(e);
             return null;
-          }
-          const passwordsMatch = await bcrypt.compare(
-            password,
-            currentUser.password,
-          );
-          if (passwordsMatch) {
-            console.log("returning user");
-            return currentUser;
           }
           return null;
         }

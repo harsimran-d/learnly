@@ -1,11 +1,11 @@
 import { NextAuthConfig, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 
-interface CustomUser extends User {
+export interface CustomUser extends User {
   role?: string;
 }
 
-interface CustomSession extends Session {
+export interface CustomSession extends Session {
   user: CustomUser;
 }
 
@@ -21,7 +21,7 @@ export default {
       const customUser = user as CustomUser;
       if (user?.id) {
         token.sub = customUser.id;
-        token.role = customUser.role ?? "user";
+        token.role = customUser.role ?? "teacher";
       }
       return token;
     },

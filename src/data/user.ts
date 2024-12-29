@@ -9,7 +9,11 @@ export const getUserByEmail = async (email: string) => {
     });
     return user;
   } catch (e) {
-    console.log(e);
+    if (e instanceof Error) {
+      console.log(e ?? "Something went wrong");
+    } else {
+      console.log("Something went wrong");
+    }
     console.log("user not found", email);
     return null;
   }
