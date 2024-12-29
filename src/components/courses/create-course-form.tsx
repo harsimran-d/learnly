@@ -20,13 +20,12 @@ import { useState } from "react";
 import { FormError } from "../form/form-error";
 import { FormSuccess } from "../form/form-success";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 export const CreateCourseForm = () => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof CreateCourseSchema>>({
     resolver: zodResolver(CreateCourseSchema),
@@ -40,15 +39,15 @@ export const CreateCourseForm = () => {
   const onSubmit = async (values: z.infer<typeof CreateCourseSchema>) => {
     setError("");
     setSuccess("");
-    toast({
-      title: "Creating course...",
-    });
     try {
       const result = await axios.post("/api/courses", values);
       console.log(result);
       if (result.status == 201) {
-        toast({
-          title: "Course created",
+        toast("Course created", {
+          cancel: {
+            label: "X",
+            onClick: () => console.log("toast canceled"),
+          },
         });
         router.push("/teacher/courses/edit/" + result.data.id);
       } else {
