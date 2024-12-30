@@ -24,7 +24,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credentials) => {
         const { email, password } = credentials;
-        console.log(email, password);
         const validatedFields = LoginSchema.safeParse({ email, password });
 
         if (validatedFields.success) {
@@ -40,7 +39,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               currentUser.password,
             );
             if (passwordsMatch) {
-              console.log("returning user");
               return currentUser;
             }
           } catch (e) {

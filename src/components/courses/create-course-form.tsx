@@ -41,7 +41,6 @@ export const CreateCourseForm = () => {
     setSuccess("");
     try {
       const result = await axios.post("/api/courses", values);
-      console.log(result);
       if (result.status == 201) {
         toast.success("Course created", {
           cancel: {
@@ -60,7 +59,7 @@ export const CreateCourseForm = () => {
           return;
         }
       }
-      console.log(e);
+      console.error(e);
       setError("Something went wrong");
     }
   };

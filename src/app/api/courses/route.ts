@@ -25,7 +25,6 @@ export async function POST(req: Request) {
     if (!id) {
       return NextResponse.json({ error: "User not found" }, { status: 401 });
     }
-    console.log("Creating course", title, id);
     const course = await db.course.create({
       data: {
         title,
@@ -39,9 +38,9 @@ export async function POST(req: Request) {
     return NextResponse.json(course, { status: 201 });
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e ? "[POST,COURSES] " + e : "Unknown error happened");
+      console.error(e ? "[POST,COURSES] " + e : "Unknown error happened");
     } else {
-      console.log("[POST,COURSES] Unknown error happened");
+      console.error("[POST,COURSES] Unknown error happened");
     }
 
     return new NextResponse("Internal Error", { status: 500 });
