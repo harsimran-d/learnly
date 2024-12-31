@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import { LayoutDashboard } from "lucide-react";
 import { redirect } from "next/navigation";
+import TitleForm from "./_components/title-form";
 const EditCourse = async ({
   params,
 }: {
@@ -47,6 +48,10 @@ const EditCourse = async ({
             <IconBadge icon={LayoutDashboard} />
             <h2 className="text-xl">Customize your course</h2>
           </div>
+          <TitleForm
+            initialData={{ title: course.title }}
+            courseId={courseId}
+          />
         </div>
       </div>
     </div>
