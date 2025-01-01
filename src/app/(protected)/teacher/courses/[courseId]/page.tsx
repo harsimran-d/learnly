@@ -4,6 +4,7 @@ import db from "@/lib/db";
 import { LayoutDashboard } from "lucide-react";
 import { redirect } from "next/navigation";
 import DescriptionForm from "./_components/description-form";
+import ImageUploadForm from "./_components/image-upload-form";
 import TitleForm from "./_components/title-form";
 const EditCourse = async ({
   params,
@@ -56,6 +57,10 @@ const EditCourse = async ({
           <DescriptionForm
             initialData={{ description: course.description ?? "" }}
             courseId={courseId}
+          />
+          <ImageUploadForm
+            courseId={courseId}
+            initialData={{ imageURL: course.imageURL || "" }}
           />
         </div>
       </div>
