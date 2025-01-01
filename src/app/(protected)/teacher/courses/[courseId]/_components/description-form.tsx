@@ -1,5 +1,5 @@
 "use client";
-
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -7,76 +7,82 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { PencilIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Pencil } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-
-interface TitleFormProps {
+interface DescriptionFormProps {
   courseId: string;
   initialData: {
-    title: string;
+    description: string;
   };
 }
 
 const formSchema = z.object({
-  title: z.string().nonempty({
-    message: "Title is requried",
+  description: z.string().nonempty({
+    message: "Description is required",
   }),
 });
 
-const TitleForm = ({ courseId, initialData }: TitleFormProps) => {
+const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps) => {
+  const router = useRouter();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: initialData.title,
+      description: initialData.description,
     },
   });
-
   const { isSubmitting, isValid } = form.formState;
-  const router = useRouter();
+
+  const toggleEdit = () => setIsEditing((current) => !current);
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const response = await axios.patch(`/api/courses/${courseId}`, values);
       if (response.status !== 200) {
         throw new Error();
       }
-      toast.success("Course Title  updated");
+      toast.success("Course Description updated");
       toggleEdit();
       router.refresh();
     } catch (e) {
-      console.log(e);
+      console.error(e);
       toast.error("Something went wrong.");
     }
   };
 
-  const toggleEdit = () => setIsEditing((current) => !current);
-
   return (
     <div className="mt-6 rounded-md border bg-slate-100 p-4">
       <div className="flex items-center justify-between font-medium">
-        Course Title
-        <Button variant="outline" onClick={toggleEdit}>
-          {isEditing ? (
-            <>Cancel</>
-          ) : (
-            <>
-              <Pencil className="mr-2" />
-              Edit Title
-            </>
-          )}
-        </Button>
+        <div>Course Description</div>
+        {isEditing ? (
+          <>
+            <Button variant="outline" onClick={toggleEdit}>
+              Cancel
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button variant="outline" onClick={toggleEdit}>
+              <PencilIcon />
+              Edit Description
+            </Button>
+          </>
+        )}
       </div>
-      {!isEditing && <p className="mt-2 text-sm">{initialData.title}</p>}
-      {isEditing && (
+      {!isEditing ? (
+        initialData.description == "" ? (
+          <p className="text-sm italic">No description provided</p>
+        ) : (
+          <p className="mt-2 text-sm">{initialData.description}</p>
+        )
+      ) : (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -84,14 +90,14 @@ const TitleForm = ({ courseId, initialData }: TitleFormProps) => {
           >
             <FormField
               control={form.control}
-              name="title"
+              name="description"
               render={({ field }) => {
                 return (
                   <FormItem>
                     <FormControl>
-                      <Input
+                      <Textarea
                         disabled={isSubmitting}
-                        placeholder="e.g. 'Flutter developement'"
+                        placeholder="e.g. In this course..."
                         {...field}
                         className="bg-white"
                       />
@@ -101,11 +107,9 @@ const TitleForm = ({ courseId, initialData }: TitleFormProps) => {
                 );
               }}
             />
-            <div className="flex items-center gap-x-2">
-              <Button disabled={!isValid || isSubmitting} type="submit">
-                Save
-              </Button>
-            </div>
+            <Button disabled={isSubmitting || !isValid} type="submit">
+              Save
+            </Button>
           </form>
         </Form>
       )}
@@ -113,4 +117,4 @@ const TitleForm = ({ courseId, initialData }: TitleFormProps) => {
   );
 };
 
-export default TitleForm;
+export default DescriptionForm;

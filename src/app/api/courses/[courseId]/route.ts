@@ -3,14 +3,14 @@ import db from "@/lib/db";
 import { NextResponse } from "next/server";
 export async function PATCH(
   req: Request,
-  { params }: { params: { courseId: string } },
+  { params }: { params: Promise<{ courseId: string }> },
 ) {
   try {
     const userId = (await auth())?.user?.id;
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-    const { courseId } = params;
+    const { courseId } = await params;
     const values = await req.json();
 
     await db.course.update({
