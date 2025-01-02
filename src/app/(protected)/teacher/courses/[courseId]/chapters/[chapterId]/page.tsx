@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import DescriptionForm from "./_components/description-form";
+import ImageUploadForm from "./_components/image-upload-form";
 import TitleForm from "./_components/title-form";
 
 const EditChapter = async ({
@@ -48,6 +49,10 @@ const EditChapter = async ({
             <DescriptionForm
               chapterId={chapterId}
               initialData={{ description: chapter.description || "" }}
+            />
+            <ImageUploadForm
+              chapterId={chapterId}
+              initialData={{ imageURL: chapter.imageUrl || "" }}
             />
           </div>
         </div>
