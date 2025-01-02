@@ -87,8 +87,9 @@ const EditCourse = async ({
             <div className="flex items-center gap-x-2">
               <IconBadge icon={BookOpen} />
               <h2 className="text-xl">Chapters</h2>
+              <div className="flex-1"></div>
               <Link href={`/teacher/courses/${courseId}/chapters/create`}>
-                <Button>Create Chapter</Button>
+                <Button variant={"outline"}>Create Chapter</Button>
               </Link>
             </div>
             <ChaptersForm
