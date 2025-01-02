@@ -12,7 +12,7 @@ enum Role {
   TEACHER
 }
 
-enum CourseStatus {
+enum PublishStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
@@ -38,19 +38,19 @@ model User {
 }
 
 model Course {
-  id          String       @id @default(cuid())
+  id          String        @id @default(cuid())
   title       String
   description String?
   imageURL    String?
-  price       Float?        
-  status CourseStatus @default(DRAFT)
+  price       Float?
+  status      PublishStatus @default(DRAFT)
   teacherId   String
-  teacher     User         @relation(fields: [teacherId], references: [id])
+  teacher     User          @relation(fields: [teacherId], references: [id])
   chapters    Chapter[]
   enrollments Enrollment[]
   payments    Payment[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   UserCourseProgress UserCourseProgress[]
 
@@ -58,16 +58,18 @@ model Course {
 }
 
 model Chapter {
-  id          String   @id @default(cuid())
+  id          String        @id @default(cuid())
   title       String
   description String
   videoUrl    String?
+  imageUrl    String?
   notionDoc   String?
+  status      PublishStatus @default(DRAFT)
   courseId    String
-  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  sequence    Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  course      Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  sequence    Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   UserChapterProgress UserChapterProgress[]
 
