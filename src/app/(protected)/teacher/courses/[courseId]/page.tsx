@@ -1,10 +1,11 @@
 import { IconBadge } from "@/components/icon-badge";
 import { auth } from "@/lib/auth";
 import db from "@/lib/db";
-import { LayoutDashboard } from "lucide-react";
+import { CircleDollarSign, LayoutDashboard } from "lucide-react";
 import { redirect } from "next/navigation";
 import DescriptionForm from "./_components/description-form";
 import ImageUploadForm from "./_components/image-upload-form";
+import PriceForm from "./_components/price-form";
 import TitleForm from "./_components/title-form";
 const EditCourse = async ({
   params,
@@ -34,7 +35,9 @@ const EditCourse = async ({
     course.price,
   ];
   const totalFields = requiredFields.length;
-  const completedFields = requiredFields.filter((field) => field).length;
+  const completedFields = requiredFields.filter((field) =>
+    field?.toString(),
+  ).length;
   const completionText = `${completedFields}/${totalFields}`;
   return (
     <div className="p-6">
@@ -62,6 +65,18 @@ const EditCourse = async ({
             courseId={courseId}
             initialData={{ imageURL: course.imageURL || "" }}
           />
+        </div>
+        <div className="space-y-6">
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={CircleDollarSign} />
+              <h2 className="text-xl">Sell your Course</h2>
+            </div>
+            <PriceForm
+              initialData={{ price: course.price ?? undefined }}
+              courseId={courseId}
+            />
+          </div>
         </div>
       </div>
     </div>
