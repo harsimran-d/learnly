@@ -1,4 +1,6 @@
+import { Button } from "@/components/ui/button";
 import { $Enums } from "@prisma/client";
+import Link from "next/link";
 
 interface ChaptersFormProps {
   courseId: string;
@@ -11,7 +13,7 @@ interface ChaptersFormProps {
     }[];
   };
 }
-const ChaptersForm = ({ initialData }: ChaptersFormProps) => {
+const ChaptersForm = ({ courseId, initialData }: ChaptersFormProps) => {
   return (
     <div className="rounded-md border bg-slate-100 p-6">
       {initialData.chapters.length === 0 ? (
@@ -19,8 +21,18 @@ const ChaptersForm = ({ initialData }: ChaptersFormProps) => {
           Please add at least 1 chapter
         </p>
       ) : (
-        // TODO: Make the list better and make chapters editable
-        <p>There are {initialData.chapters.length} chapters in this course</p>
+        initialData.chapters.map((chapter) => {
+          return (
+            <div key={chapter.id} className="flex items-center justify-between">
+              <p>{chapter.title}</p>
+              <Link
+                href={`/teacher/courses/${courseId}/chapters/${chapter.id}`}
+              >
+                <Button variant="ghost">Edit</Button>
+              </Link>
+            </div>
+          );
+        })
       )}
     </div>
   );
