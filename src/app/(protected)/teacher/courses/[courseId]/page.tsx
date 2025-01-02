@@ -1,8 +1,11 @@
 import { IconBadge } from "@/components/icon-badge";
+import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
 import db from "@/lib/db";
-import { CircleDollarSign, LayoutDashboard } from "lucide-react";
+import { BookOpen, CircleDollarSign, LayoutDashboard } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import ChaptersForm from "./_components/chapters-form";
 import DescriptionForm from "./_components/description-form";
 import ImageUploadForm from "./_components/image-upload-form";
 import PriceForm from "./_components/price-form";
@@ -21,6 +24,19 @@ const EditCourse = async ({
     where: {
       id: courseId,
       teacherId: session?.user?.id,
+    },
+    include: {
+      chapters: {
+        select: {
+          id: true,
+          title: true,
+          status: true,
+          sequence: true,
+        },
+        orderBy: {
+          sequence: "asc",
+        },
+      },
     },
   });
 
@@ -67,6 +83,19 @@ const EditCourse = async ({
           />
         </div>
         <div className="space-y-6">
+          <div className="space-y-6">
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={BookOpen} />
+              <h2 className="text-xl">Chapters</h2>
+              <Link href={`/teacher/courses/${courseId}/chapters/create`}>
+                <Button>Create Chapter</Button>
+              </Link>
+            </div>
+            <ChaptersForm
+              initialData={{ chapters: course.chapters }}
+              courseId={courseId}
+            />
+          </div>
           <div>
             <div className="flex items-center gap-x-2">
               <IconBadge icon={CircleDollarSign} />

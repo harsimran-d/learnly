@@ -24,3 +24,9 @@ export const CreateCourseSchema = z.object({
     message: "Title cannot be empty",
   }),
 });
+
+export const CreateChapterSchema = z.object({
+  title: z.string().refine((val) => val.trim().length > 0, {
+    message: "Title cannot be empty",
+  }),
+});
