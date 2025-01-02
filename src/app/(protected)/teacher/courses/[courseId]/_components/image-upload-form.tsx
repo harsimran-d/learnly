@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { PencilIcon } from "lucide-react";
+import { ImageIcon, PencilIcon, PlusCircleIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -56,6 +56,11 @@ const ImageUploadForm = ({ courseId, initialData }: ImageUploadFormProps) => {
         <Button variant={"outline"} onClick={toggleEdit}>
           {isEditing ? (
             <>Cancel</>
+          ) : initialData.imageURL == "" ? (
+            <>
+              <PlusCircleIcon />
+              Add Image
+            </>
           ) : (
             <>
               <PencilIcon /> Edit Image
@@ -66,15 +71,16 @@ const ImageUploadForm = ({ courseId, initialData }: ImageUploadFormProps) => {
 
       {!isEditing ? (
         initialData.imageURL == "" ? (
-          <>No Image available</>
+          <div className="flex h-60 w-60 items-center justify-center rounded-md bg-slate-200">
+            <ImageIcon className="h-10 w-10 text-slate-500" />
+          </div>
         ) : (
-          <div className="h-48 w-48 border">
+          <div className="h-60 w-60 border">
             <Image
               src={initialData.imageURL}
               alt="course image"
               width={1024}
               height={1024}
-              unoptimized
             />
           </div>
         )
