@@ -60,7 +60,7 @@ model Course {
 model Chapter {
   id          String        @id @default(cuid())
   title       String
-  description String
+  description String?
   videoUrl    String?
   imageUrl    String?
   notionDoc   String?
