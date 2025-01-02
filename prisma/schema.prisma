@@ -60,6 +60,8 @@ model Course {
 model Chapter {
   id          String        @id @default(cuid())
   title       String
+  sequence    Int
+  isFree      Boolean       @default(false)
   description String?
   videoUrl    String?
   imageUrl    String?
@@ -67,7 +69,6 @@ model Chapter {
   status      PublishStatus @default(DRAFT)
   courseId    String
   course      Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  sequence    Int           @default(0)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
