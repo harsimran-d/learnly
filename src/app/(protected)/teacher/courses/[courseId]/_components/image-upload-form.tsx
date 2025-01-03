@@ -75,12 +75,12 @@ const ImageUploadForm = ({ courseId, initialData }: ImageUploadFormProps) => {
             <ImageIcon className="h-10 w-10 text-slate-500" />
           </div>
         ) : (
-          <div className="h-60 w-60 border">
+          <div className="relative h-60 w-60 border">
             <Image
               src={initialData.imageURL}
               alt="course image"
-              width={1024}
-              height={1024}
+              fill
+              objectFit="contain"
             />
           </div>
         )
