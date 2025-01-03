@@ -9,9 +9,10 @@ import type {
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { $Enums } from "@prisma/client";
 import axios from "axios";
-import { Grip } from "lucide-react";
+import { Grip, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 interface ChaptersListProps {
   courseId: string;
@@ -49,6 +50,11 @@ function reorder<TItem>(
 }
 
 const ChaptersList = ({ courseId, initialData }: ChaptersListProps) => {
+  useEffect(() => {
+    setChapters(initialData.chapters);
+  }, [initialData.chapters]);
+  const router = useRouter();
+  const [isUpdating, setIsUpdating] = useState(false);
   const [chapters, setChapters] = useState(initialData.chapters);
   const updateSequences = async (
     newSequences: {
@@ -56,10 +62,13 @@ const ChaptersList = ({ courseId, initialData }: ChaptersListProps) => {
       sequence: number;
     }[],
   ) => {
+    setIsUpdating(true);
     try {
       const response = await axios.put(
-        `/api/courses/${courseId}/chapters/reorder`,
-        newSequences,
+        `/api/courses/${courseId}/chapter/reorder`,
+        {
+          list: newSequences,
+        },
       );
       if (response.status == 200) {
         toast.success("Reorder successfull");
@@ -69,6 +78,9 @@ const ChaptersList = ({ courseId, initialData }: ChaptersListProps) => {
     } catch (e) {
       console.log(e);
       toast.error("Something went wrong");
+    } finally {
+      setIsUpdating(false);
+      router.refresh();
     }
   };
 
@@ -94,7 +106,12 @@ const ChaptersList = ({ courseId, initialData }: ChaptersListProps) => {
     updateSequences(newSequences);
   };
   return (
-    <div className="rounded-md border bg-slate-100 p-6">
+    <div className="relative rounded-md border bg-slate-100 p-6">
+      {isUpdating && (
+        <div className="rounded-m absolute left-0 top-0 flex h-full w-full items-center justify-center bg-slate-500/20 text-[color:hsl(30,100,50)]">
+          <Loader2 className="animate-spin" />
+        </div>
+      )}
       {chapters.length === 0 ? (
         <p className="text-sm italic text-slate-400">
           Please add at least 1 chapter
