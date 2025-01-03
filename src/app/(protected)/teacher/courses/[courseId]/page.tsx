@@ -48,12 +48,11 @@ const EditCourse = async ({
     course.title,
     course.description,
     course.imageURL,
-    course.price,
+    course.price?.toString(),
+    course.chapters.some((chapter) => chapter.status === "PUBLISHED"),
   ];
   const totalFields = requiredFields.length;
-  const completedFields = requiredFields.filter((field) =>
-    field?.toString(),
-  ).length;
+  const completedFields = requiredFields.filter(Boolean).length;
   const completionText = `${completedFields}/${totalFields}`;
   return (
     <div className="p-6">
