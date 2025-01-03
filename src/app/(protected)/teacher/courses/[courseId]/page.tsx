@@ -5,7 +5,7 @@ import db from "@/lib/db";
 import { BookOpen, CircleDollarSign, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import ChaptersForm from "./_components/chapters-form";
+import ChaptersList from "./_components/chapters-list";
 import DescriptionForm from "./_components/description-form";
 import ImageUploadForm from "./_components/image-upload-form";
 import PriceForm from "./_components/price-form";
@@ -91,7 +91,7 @@ const EditCourse = async ({
                 <Button variant={"outline"}>Create Chapter</Button>
               </Link>
             </div>
-            <ChaptersForm
+            <ChaptersList
               initialData={{ chapters: course.chapters }}
               courseId={courseId}
             />
