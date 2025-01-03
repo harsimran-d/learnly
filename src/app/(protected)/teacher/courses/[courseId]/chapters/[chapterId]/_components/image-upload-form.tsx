@@ -84,7 +84,7 @@ const ImageUploadForm = ({ chapterId, initialData }: ImageUploadFormProps) => {
               src={initialData.imageURL}
               alt="Chapter image"
               fill
-              objectFit="contain"
+              className="object-contain"
             />
           </div>
         )

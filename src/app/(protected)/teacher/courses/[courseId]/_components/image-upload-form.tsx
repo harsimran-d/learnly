@@ -80,7 +80,7 @@ const ImageUploadForm = ({ courseId, initialData }: ImageUploadFormProps) => {
               src={initialData.imageURL}
               alt="course image"
               fill
-              objectFit="contain"
+              className="object-contain"
             />
           </div>
         )
