@@ -22,10 +22,16 @@ export async function POST(
 
     const { courseId } = await params;
     const { title } = await req.json();
+    const totalChapters = await db.chapter.count({
+      where: {
+        courseId: courseId,
+      },
+    });
     const chapter = await db.chapter.create({
       data: {
         title,
         courseId: courseId,
+        sequence: totalChapters + 1,
       },
       select: {
         id: true,
