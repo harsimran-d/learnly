@@ -41,7 +41,7 @@ export async function PUT(
         Bucket: "learnly.harsimran",
         Key: oldFilePath,
       });
-      s3Client.send(command);
+      await s3Client.send(command);
     }
 
     const finalUrl = `https://s3.ap-south-1.amazonaws.com/learnly.harsimran/${finalName}`;
