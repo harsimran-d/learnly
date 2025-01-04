@@ -34,12 +34,12 @@ export async function PUT(
         videoUrl: true,
       },
     });
-    const fileName = old?.videoUrl?.split("learnly.harsimran/").pop();
-    if (fileName) {
-      console.log("trying to delete key ", fileName);
+    const oldFilePath = old?.videoUrl?.split("learnly.harsimran/").pop();
+    if (oldFilePath) {
+      console.log("trying to delete key ", oldFilePath);
       const command = new DeleteObjectCommand({
         Bucket: "learnly.harsimran",
-        Key: fileName,
+        Key: oldFilePath,
       });
       s3Client.send(command);
     }
@@ -69,14 +69,17 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ chapterId: string }> },
 ) {
-  const { fileType } = await req.json();
+  const { fileType, courseId } = await req.json();
   const { chapterId } = await params;
-  if (!fileType) {
-    return NextResponse.json({ error: "Missing fileType" }, { status: 400 });
+  if (!fileType || !courseId || !chapterId) {
+    return NextResponse.json(
+      { error: "Missing fileType or courseId or chapterId" },
+      { status: 400 },
+    );
   }
   const timestamp = Date.now();
   const extension = fileType.split("/")[1];
-  const fileName = `uploads/${chapterId}/video-${timestamp}.${extension}`;
+  const fileName = `uploads/course-${courseId}/chapter-${chapterId}/video-${timestamp}.${extension}`;
   try {
     const command = new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,

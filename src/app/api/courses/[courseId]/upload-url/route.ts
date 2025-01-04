@@ -34,16 +34,17 @@ export async function PUT(
         imageURL: true,
       },
     });
-    const fileName = old?.imageURL?.split("/").pop();
-    if (fileName) {
+
+    const oldFilePath = old?.imageURL?.split("learnly.harsimran/").pop();
+    if (oldFilePath) {
       const command = new DeleteObjectCommand({
         Bucket: "learnly.harsimran",
-        Key: "uploads/" + fileName,
+        Key: oldFilePath,
       });
       s3Client.send(command);
     }
 
-    const finalUrl = `https://s3.ap-south-1.amazonaws.com/learnly.harsimran/uploads/${finalName}`;
+    const finalUrl = `https://s3.ap-south-1.amazonaws.com/learnly.harsimran/${finalName}`;
     await db.course.update({
       where: {
         id: courseId,
@@ -75,11 +76,12 @@ export async function POST(
   }
   const timestamp = Date.now();
   const extension = fileType.split("/")[1];
-  const fileName = `${courseId}-${timestamp}-cover.${extension}`;
+  const filePath = `uploads/course-${courseId}/cover-${timestamp}.${extension}`;
+
   try {
     const command = new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Key: `uploads/${fileName}`,
+      Key: filePath,
       ContentType: fileType,
     });
 
@@ -88,7 +90,7 @@ export async function POST(
     });
 
     return NextResponse.json(
-      { url: presignedUrl, finalName: fileName },
+      { url: presignedUrl, finalName: filePath },
       { status: 200 },
     );
   } catch (err) {

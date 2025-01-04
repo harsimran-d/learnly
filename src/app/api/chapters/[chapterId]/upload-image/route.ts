@@ -34,12 +34,12 @@ export async function PUT(
         imageUrl: true,
       },
     });
-    const fileName = old?.imageUrl?.split("learnly.harsimran/").pop();
-    if (fileName) {
-      console.log("trying to delete key ", fileName);
+    const oldFilePath = old?.imageUrl?.split("learnly.harsimran/").pop();
+    if (oldFilePath) {
+      console.log("deleting from s3 filepath: ", oldFilePath);
       const command = new DeleteObjectCommand({
         Bucket: "learnly.harsimran",
-        Key: fileName,
+        Key: oldFilePath,
       });
       s3Client.send(command);
     }
@@ -69,18 +69,21 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ chapterId: string }> },
 ) {
-  const { fileType } = await req.json();
+  const { fileType, courseId } = await req.json();
   const { chapterId } = await params;
-  if (!fileType) {
-    return NextResponse.json({ error: "Missing fileType" }, { status: 400 });
+  if (!fileType || !courseId || !chapterId) {
+    return NextResponse.json(
+      { error: "Missing fileType or courseId or chapterId" },
+      { status: 400 },
+    );
   }
   const timestamp = Date.now();
   const extension = fileType.split("/")[1];
-  const fileName = `uploads/${chapterId}/cover-${timestamp}.${extension}`;
+  const filePath = `uploads/course-${courseId}/chapter-${chapterId}/cover-${timestamp}.${extension}`;
   try {
     const command = new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Key: fileName,
+      Key: filePath,
       ContentType: fileType,
     });
 
@@ -89,7 +92,7 @@ export async function POST(
     });
 
     return NextResponse.json(
-      { url: presignedUrl, finalName: fileName },
+      { url: presignedUrl, finalName: filePath },
       { status: 200 },
     );
   } catch (err) {

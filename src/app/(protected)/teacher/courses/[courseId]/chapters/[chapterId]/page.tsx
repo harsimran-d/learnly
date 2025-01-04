@@ -69,6 +69,7 @@ const EditChapter = async ({
                 isNotPublishable={!isComplete}
                 chapterId={chapterId}
                 chapterStatus={chapter.status}
+                courseId={chapter.courseId}
               />
             </div>
           </div>
