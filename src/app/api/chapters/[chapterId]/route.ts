@@ -1,6 +1,10 @@
 import { auth } from "@/lib/auth";
 import db from "@/lib/db";
-import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectsCommand,
+  ListObjectsV2Command,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 
 const s3Client = new S3Client({
@@ -34,13 +38,26 @@ export async function DELETE(
     if (!deletedChapter) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-
-    const command = new DeleteObjectCommand({
+    const folderPath = `uploads/course-${deletedChapter.courseId}/chapter-${deletedChapter.id}/`;
+    const contentsCommand = new ListObjectsV2Command({
       Bucket: "learnly.harsimran",
-      Key: `uploads/${deletedChapter.courseId}/${deletedChapter.id}`,
+      Prefix: folderPath,
     });
-    s3Client.send(command);
+    const listContents = await s3Client.send(contentsCommand);
 
+    if (!listContents.Contents || listContents.Contents?.length == 0) {
+      console.log("No objects found in the folder.", folderPath);
+      return new NextResponse(null, { status: 204 });
+    }
+    const objectsToDelete = listContents.Contents.map((item) => ({
+      Key: item.Key!,
+    }));
+    const command = new DeleteObjectsCommand({
+      Bucket: "learnly.harsimran",
+      Delete: { Objects: objectsToDelete },
+    });
+    await s3Client.send(command);
+    console.log(`Folder ${folderPath} and all objects deleted successfully.`);
     const publishedChapters = await db.chapter.findMany({
       where: {
         courseId: deletedChapter.courseId,
