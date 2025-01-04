@@ -6,6 +6,7 @@ import { BookOpen, CircleDollarSign, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import ChaptersList from "./_components/chapters-list";
+import CourseActions from "./_components/course-actions";
 import { CourseStatusBanner } from "./_components/course-status-banner";
 import DescriptionForm from "./_components/description-form";
 import ImageUploadForm from "./_components/image-upload-form";
@@ -56,6 +57,7 @@ const EditCourse = async ({
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
   const completionText = `${completedFields}/${totalFields}`;
+  const isComplete = requiredFields.every(Boolean);
   return (
     <>
       <CourseStatusBanner variant={course.status} />
@@ -64,6 +66,13 @@ const EditCourse = async ({
           <div className="flex flex-col gap-y-2">
             <h1 className="text-2xl font-medium">Course Setup</h1>
             <span>Complete all fields {completionText}</span>
+          </div>
+          <div>
+            <CourseActions
+              courseId={courseId}
+              courseStatus={course.status}
+              isNotPublishable={!isComplete}
+            />
           </div>
         </div>
         <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-2">
