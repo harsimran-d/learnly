@@ -3,6 +3,7 @@
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormMessage,
@@ -14,30 +15,31 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-interface TitleFormProps {
+interface ChapterAccessFormProps {
   chapterId: string;
   initialData: {
-    title: string;
+    isFree: boolean;
   };
 }
 
 const formSchema = z.object({
-  title: z.string().nonempty({
-    message: "Title is requried",
-  }),
+  isFree: z.boolean(),
 });
 
-const TitleForm = ({ chapterId, initialData }: TitleFormProps) => {
+const ChapterAccessForm = ({
+  chapterId,
+  initialData,
+}: ChapterAccessFormProps) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: initialData.title,
+      isFree: initialData.isFree,
     },
   });
 
@@ -49,7 +51,7 @@ const TitleForm = ({ chapterId, initialData }: TitleFormProps) => {
       if (response.status !== 200) {
         throw new Error();
       }
-      toast.success("Chapter Title  updated");
+      toast.success("Chapter Access  updated");
       toggleEdit();
       router.refresh();
     } catch (e) {
@@ -61,21 +63,30 @@ const TitleForm = ({ chapterId, initialData }: TitleFormProps) => {
   const toggleEdit = () => setIsEditing((current) => !current);
 
   return (
-    <div className="rounded-md border bg-slate-100 p-4">
+    <div className="mt-6 rounded-md border bg-slate-100 p-4">
       <div className="flex items-center justify-between font-medium">
-        Chapter Title
+        Chapter Access
         <Button variant="outline" onClick={toggleEdit}>
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
               <Pencil className="mr-2" />
-              Edit Title
+              Edit Access
             </>
           )}
         </Button>
       </div>
-      {!isEditing && <p className="mt-2 text-sm">{initialData.title}</p>}
+      {!isEditing &&
+        (initialData.isFree ? (
+          <p className="mt-1 max-w-min rounded-md bg-green-200 px-2 py-1 text-sm text-green-700">
+            Free
+          </p>
+        ) : (
+          <p className="mt-1 max-w-min rounded-md bg-red-200 px-2 py-1 text-sm text-red-700">
+            Paid
+          </p>
+        ))}
       {isEditing && (
         <Form {...form}>
           <form
@@ -84,19 +95,22 @@ const TitleForm = ({ chapterId, initialData }: TitleFormProps) => {
           >
             <FormField
               control={form.control}
-              name="title"
+              name="isFree"
               render={({ field }) => {
                 return (
                   <FormItem>
                     <FormControl>
-                      <Input
+                      <Checkbox
+                        checked={field.value}
                         disabled={isSubmitting}
-                        placeholder="e.g. 'Installing Flutter'"
-                        {...field}
+                        onCheckedChange={field.onChange}
                         className="bg-white"
                       />
                     </FormControl>
                     <FormMessage />
+                    <FormDescription>
+                      Check this box to make it free to preview
+                    </FormDescription>
                   </FormItem>
                 );
               }}
@@ -113,4 +127,4 @@ const TitleForm = ({ chapterId, initialData }: TitleFormProps) => {
   );
 };
 
-export default TitleForm;
+export default ChapterAccessForm;
