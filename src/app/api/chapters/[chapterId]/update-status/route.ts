@@ -49,6 +49,24 @@ export const POST = async (
           status: status,
         },
       });
+      if (status == PublishStatus.ARCHIVED || PublishStatus.DRAFT) {
+        const publishedChapters = await db.chapter.findMany({
+          where: {
+            courseId: chapterOwner.courseId,
+            status: "PUBLISHED",
+          },
+        });
+        if (!publishedChapters.length) {
+          await db.course.update({
+            where: {
+              id: chapterOwner.courseId,
+            },
+            data: {
+              status: "DRAFT",
+            },
+          });
+        }
+      }
       return NextResponse.json("Status updated successfully", { status: 200 });
     } else {
       console.log("tried to publish partial chapter");
