@@ -96,6 +96,7 @@ const ImageUploadForm = ({ courseId, initialData }: ImageUploadFormProps) => {
                     <FormControl>
                       <Input
                         type="file"
+                        accept="image/*"
                         onChange={(e) => field.onChange(e.target.files)}
                       />
                     </FormControl>
