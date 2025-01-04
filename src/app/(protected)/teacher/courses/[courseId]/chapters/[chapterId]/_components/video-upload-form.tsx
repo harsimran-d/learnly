@@ -10,8 +10,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { ImageIcon, PencilIcon, PlusCircleIcon } from "lucide-react";
-import Image from "next/image";
+import { PencilIcon, PlusCircleIcon, VideoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -32,25 +31,30 @@ const VideoUploadForm = ({ chapterId, initialData }: VideoUploadFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => setIsEditing((current) => !current);
   const onSubmit = async (data: FormData) => {
-    const file = data.file?.[0];
-    const response = await axios.post(
-      `/api/chapters/${chapterId}/upload-video`,
-      {
-        fileType: file.type,
-      },
-    );
-    console.log(response.data.url);
-    const uploadResponse = await axios.put(response.data.url, data.file?.[0]);
-    console.log(uploadResponse);
-    if (uploadResponse.status == 200) {
-      await axios.put(`/api/chapters/${chapterId}/upload-video`, {
-        finalName: response.data.finalName,
-      });
-      toast.success("Chapter Video  updated");
-      toggleEdit();
-      router.refresh();
-    } else {
-      toast.error("Video upload failed");
+    try {
+      const file = data.file?.[0];
+      const response = await axios.post(
+        `/api/chapters/${chapterId}/upload-video`,
+        {
+          fileType: file.type,
+        },
+      );
+      console.log(response.data.url);
+      const uploadResponse = await axios.put(response.data.url, data.file?.[0]);
+      console.log(uploadResponse);
+      if (uploadResponse.status == 200) {
+        await axios.put(`/api/chapters/${chapterId}/upload-video`, {
+          finalName: response.data.finalName,
+        });
+        toast.success("Chapter Video  updated");
+        toggleEdit();
+        router.refresh();
+      } else {
+        toast.error("Video upload failed");
+      }
+    } catch (e) {
+      console.error(e);
+      toast.error("Something went wrong");
     }
   };
   return (
@@ -75,17 +79,17 @@ const VideoUploadForm = ({ chapterId, initialData }: VideoUploadFormProps) => {
 
       {!isEditing ? (
         initialData.videoUrl == "" ? (
-          <div className="flex h-60 w-60 items-center justify-center rounded-md bg-slate-200">
-            <ImageIcon className="h-10 w-10 text-slate-500" />
+          <div className="flex h-60 w-60 flex-col items-center justify-center rounded-md bg-slate-200">
+            <VideoIcon className="h-10 w-10 text-slate-500" />
+            <p className="text-xs text-slate-500">No video found</p>
           </div>
         ) : (
-          <div className="relative h-60 w-60 border">
-            <Image
+          <div className="relative aspect-video h-80 border">
+            <video
               src={initialData.videoUrl}
-              alt="Chapter Video"
-              fill
-              className="object-contain"
-            />
+              className="h-full w-full object-contain"
+              controls={true}
+            ></video>
           </div>
         )
       ) : (
@@ -100,6 +104,7 @@ const VideoUploadForm = ({ chapterId, initialData }: VideoUploadFormProps) => {
                     <FormControl>
                       <Input
                         type="file"
+                        accept="video/mp4,video/x-m4v,video/*"
                         onChange={(e) => field.onChange(e.target.files)}
                       />
                     </FormControl>

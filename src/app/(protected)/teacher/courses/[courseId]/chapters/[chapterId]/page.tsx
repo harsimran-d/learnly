@@ -2,13 +2,14 @@ import { IconBadge } from "@/components/icon-badge";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
 import db from "@/lib/db";
-import { ArrowLeft, Eye, LayoutDashboard } from "lucide-react";
+import { ArrowLeft, Eye, LayoutDashboard, Video } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import ChapterAccessForm from "./_components/chapter-access-form";
 import DescriptionForm from "./_components/description-form";
 import ImageUploadForm from "./_components/image-upload-form";
 import TitleForm from "./_components/title-form";
+import VideoUploadForm from "./_components/video-upload-form";
 
 const EditChapter = async ({
   params,
@@ -83,6 +84,16 @@ const EditChapter = async ({
               chapterId={chapterId}
               initialData={{ isFree: chapter.isFree }}
             />
+            <div>
+              <div className="flex items-center space-x-2">
+                <IconBadge icon={Video} />
+                <div>Add a Video</div>
+              </div>
+              <VideoUploadForm
+                initialData={{ videoUrl: chapter.videoUrl || "" }}
+                chapterId={chapter.id}
+              />
+            </div>
           </div>
         </div>
       </div>

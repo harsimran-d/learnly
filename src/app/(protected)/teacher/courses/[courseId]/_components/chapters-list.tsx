@@ -22,6 +22,7 @@ interface ChaptersListProps {
       title: string;
       status: $Enums.PublishStatus;
       sequence: number;
+      isFree: boolean;
     }[];
   };
 }
@@ -132,16 +133,21 @@ const ChaptersList = ({ courseId, initialData }: ChaptersListProps) => {
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
-                          className="mb-2 flex items-center justify-between rounded-md bg-slate-200 px-2"
+                          className="mb-2 flex flex-wrap items-center justify-between rounded-md bg-slate-200 px-2"
                         >
                           <div className="flex items-center space-x-1">
                             <div {...provided.dragHandleProps}>
                               <Grip className="h-4 w-4 text-slate-500" />
                             </div>
 
-                            <p>{chapter.title}</p>
+                            <p className="truncate">{chapter.title}</p>
                           </div>
-                          <div className="flex items-center">
+                          <div className="flex items-center space-x-1">
+                            {chapter.isFree && (
+                              <div className="rounded-xl bg-green-300 px-2 py-1 text-[10px]">
+                                Free
+                              </div>
+                            )}
                             <div
                               className={cn(
                                 "rounded-xl px-2 py-1 text-[8px]",

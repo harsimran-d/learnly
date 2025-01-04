@@ -32,6 +32,7 @@ const EditCourse = async ({
           title: true,
           status: true,
           sequence: true,
+          isFree: true,
         },
         orderBy: {
           sequence: "asc",
