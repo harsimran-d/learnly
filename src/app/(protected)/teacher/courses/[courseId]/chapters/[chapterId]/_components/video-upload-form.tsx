@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 interface VideoUploadFormProps {
+  courseId: string;
   chapterId: string;
   initialData: {
     videoUrl: string;
@@ -25,7 +26,11 @@ interface FormData {
   file: FileList;
 }
 
-const VideoUploadForm = ({ chapterId, initialData }: VideoUploadFormProps) => {
+const VideoUploadForm = ({
+  chapterId,
+  initialData,
+  courseId,
+}: VideoUploadFormProps) => {
   const form = useForm<FormData>();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
@@ -37,6 +42,7 @@ const VideoUploadForm = ({ chapterId, initialData }: VideoUploadFormProps) => {
         `/api/chapters/${chapterId}/upload-video`,
         {
           fileType: file.type,
+          courseId: courseId,
         },
       );
       console.log(response.data.url);

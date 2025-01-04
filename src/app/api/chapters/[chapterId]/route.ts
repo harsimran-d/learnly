@@ -41,6 +41,23 @@ export async function DELETE(
     });
     s3Client.send(command);
 
+    const publishedChapters = await db.chapter.findMany({
+      where: {
+        courseId: deletedChapter.courseId,
+        status: "PUBLISHED",
+      },
+    });
+
+    if (!publishedChapters.length) {
+      await db.course.update({
+        where: {
+          id: deletedChapter.courseId,
+        },
+        data: {
+          status: "DRAFT",
+        },
+      });
+    }
     return new NextResponse(null, { status: 204 });
   } catch (e) {
     console.error("[CHAPTER_ID DELETE] ", e);

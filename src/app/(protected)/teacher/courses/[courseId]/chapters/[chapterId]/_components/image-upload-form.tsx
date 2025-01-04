@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 interface ImageUploadFormProps {
   chapterId: string;
+  courseId: string;
   initialData: {
     imageURL: string;
   };
@@ -26,7 +27,11 @@ interface FormData {
   file: FileList;
 }
 
-const ImageUploadForm = ({ chapterId, initialData }: ImageUploadFormProps) => {
+const ImageUploadForm = ({
+  chapterId,
+  initialData,
+  courseId,
+}: ImageUploadFormProps) => {
   const form = useForm<FormData>();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
@@ -37,6 +42,7 @@ const ImageUploadForm = ({ chapterId, initialData }: ImageUploadFormProps) => {
       `/api/chapters/${chapterId}/upload-image`,
       {
         fileType: file.type,
+        courseId: courseId,
       },
     );
     console.log(response.data.url);

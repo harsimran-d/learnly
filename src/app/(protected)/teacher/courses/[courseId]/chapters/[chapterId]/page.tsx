@@ -91,6 +91,7 @@ const EditChapter = async ({
                 initialData={{ description: chapter.description || "" }}
               />
               <ImageUploadForm
+                courseId={chapter.courseId}
                 chapterId={chapterId}
                 initialData={{ imageURL: chapter.imageUrl || "" }}
               />
@@ -112,6 +113,7 @@ const EditChapter = async ({
                   <div>Add a Video</div>
                 </div>
                 <VideoUploadForm
+                  courseId={chapter.courseId}
                   initialData={{ videoUrl: chapter.videoUrl || "" }}
                   chapterId={chapter.id}
                 />
