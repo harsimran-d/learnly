@@ -66,7 +66,7 @@ const EditChapter = async ({
             </div>
             <div>
               <ChapterActions
-                disabled={!isComplete}
+                isNotPublishable={!isComplete}
                 chapterId={chapterId}
                 chapterStatus={chapter.status}
               />
