@@ -23,7 +23,7 @@ export default async function Browse() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {courses.map((course) => {
           return (
-            <Link key={course.id} href={`/dashboard/course/${course.id}`}>
+            <Link key={course.id} href={`/browse/course/${course.id}`}>
               <div className="max-w-min rounded-lg bg-slate-50 shadow-lg">
                 {course.imageURL == "" ? (
                   <div className="flex h-60 w-80 items-center justify-center rounded-md bg-slate-200">
