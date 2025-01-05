@@ -1,3 +1,4 @@
+import { startCourse } from "@/actions/start-course";
 import { Button } from "@/components/ui/button";
 import db from "@/lib/db";
 import { ArrowLeft, ImageIcon } from "lucide-react";
@@ -48,9 +49,17 @@ export default async function CourseInfo({
           <div>{course.description}</div>
 
           <div className="mt-2 flex justify-start">
-            <Button variant={"default"} className="w-40" size={"lg"}>
-              Start Course
-            </Button>
+            <form action={startCourse}>
+              <input type="hidden" name="courseId" value={courseId} />
+              <Button
+                variant={"default"}
+                className="w-40"
+                size={"lg"}
+                type="submit"
+              >
+                Start Course
+              </Button>
+            </form>
           </div>
         </div>
       </div>
