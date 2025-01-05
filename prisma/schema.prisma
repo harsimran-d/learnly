@@ -84,6 +84,8 @@ model Enrollment {
   courseId  String
   course    Course   @relation(fields: [courseId], references: [id])
   createdAt DateTime @default(now())
+
+  @@unique([userId, courseId])
 }
 
 model Payment {
