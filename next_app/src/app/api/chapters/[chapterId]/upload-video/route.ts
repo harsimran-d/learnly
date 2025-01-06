@@ -20,21 +20,13 @@ export async function PUT(
   { params }: { params: Promise<{ chapterId: string }> },
 ) {
   const { chapterId } = await params;
-  const { finalName } = await req.json();
-  if (!finalName) {
-    return NextResponse.json({ error: "Missing finalName" }, { status: 400 });
-  }
-
   try {
-    const old = await db.chapter.findFirst({
+    const oldVideo = await db.video.findFirst({
       where: {
-        id: chapterId,
-      },
-      select: {
-        videoUrl: true,
+        chapterId,
       },
     });
-    const oldFilePath = old?.videoUrl?.split("learnly.harsimran/").pop();
+    const oldFilePath = oldVideo?.rawUrl?.split("learnly.harsimran/").pop();
     if (oldFilePath) {
       console.log("trying to delete key ", oldFilePath);
       const command = new DeleteObjectCommand({
@@ -43,20 +35,30 @@ export async function PUT(
       });
       await s3Client.send(command);
     }
+    if (oldVideo?.pendingRawUrl) {
+      await db.video.update({
+        data: {
+          rawUrl: oldVideo?.pendingRawUrl,
+          status: "UPLOADED",
+          pendingRawUrl: null,
+        },
+        where: {
+          chapterId,
+        },
+      });
 
-    const finalUrl = `https://s3.ap-south-1.amazonaws.com/learnly.harsimran/${finalName}`;
-    await db.chapter.update({
-      where: {
-        id: chapterId,
-      },
-      data: {
-        videoUrl: finalUrl,
-      },
-    });
-    return NextResponse.json(
-      { message: "Video URL Stored successfully" },
-      { status: 200 },
-    );
+      // TODO: Also here should push to the processing queue
+
+      return NextResponse.json(
+        { message: "Video URL Stored successfully" },
+        { status: 200 },
+      );
+    } else {
+      return NextResponse.json(
+        { message: "Uplaoded video url not found" },
+        { status: 404 },
+      );
+    }
   } catch (e) {
     console.log(e);
     return NextResponse.json(
@@ -91,11 +93,22 @@ export async function POST(
     const presignedUrl = await getSignedUrl(s3Client, command, {
       expiresIn: 60 * 5,
     });
+    const pendingRawUrl = `https://s3.ap-south-1.amazonaws.com/learnly.harsimran/${fileName}`;
 
-    return NextResponse.json(
-      { url: presignedUrl, finalName: fileName },
-      { status: 200 },
-    );
+    await db.video.upsert({
+      create: {
+        chapterId,
+        pendingRawUrl,
+      },
+      update: {
+        pendingRawUrl,
+      },
+      where: {
+        chapterId,
+      },
+    });
+
+    return NextResponse.json({ url: presignedUrl }, { status: 200 });
   } catch (err) {
     console.error("Error generating presigned URL:", err);
     return NextResponse.json(

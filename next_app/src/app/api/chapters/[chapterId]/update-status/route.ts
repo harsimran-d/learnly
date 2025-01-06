@@ -24,6 +24,9 @@ export const POST = async (
           teacherId: userId,
         },
       },
+      include: {
+        video: true,
+      },
     });
     if (!chapterOwner) {
       console.log("accessed by non owner");
@@ -35,7 +38,7 @@ export const POST = async (
       (chapterOwner.title &&
         chapterOwner.description &&
         chapterOwner.imageUrl &&
-        chapterOwner.videoUrl &&
+        chapterOwner.video?.status == "DONE" &&
         status === PublishStatus.PUBLISHED)
     ) {
       await db.chapter.update({
