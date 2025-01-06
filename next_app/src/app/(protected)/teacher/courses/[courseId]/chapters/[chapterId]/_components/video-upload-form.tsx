@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
+import { Video } from "@prisma/client";
 import axios from "axios";
 import { PencilIcon, PlusCircleIcon, VideoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -19,7 +20,7 @@ interface VideoUploadFormProps {
   courseId: string;
   chapterId: string;
   initialData: {
-    videoUrl: string;
+    video: Video | null;
   };
 }
 interface FormData {
@@ -49,9 +50,7 @@ const VideoUploadForm = ({
       const uploadResponse = await axios.put(response.data.url, data.file?.[0]);
       console.log(uploadResponse);
       if (uploadResponse.status == 200) {
-        await axios.put(`/api/chapters/${chapterId}/upload-video`, {
-          finalName: response.data.finalName,
-        });
+        await axios.put(`/api/chapters/${chapterId}/upload-video`);
         toast.success("Chapter Video  updated");
         toggleEdit();
         router.refresh();
@@ -70,7 +69,7 @@ const VideoUploadForm = ({
         <Button variant={"outline"} onClick={toggleEdit}>
           {isEditing ? (
             <>Cancel</>
-          ) : initialData.videoUrl == "" ? (
+          ) : initialData.video == null ? (
             <>
               <PlusCircleIcon />
               Add Video
@@ -84,18 +83,21 @@ const VideoUploadForm = ({
       </div>
 
       {!isEditing ? (
-        initialData.videoUrl == "" ? (
+        initialData.video == null ? (
           <div className="flex h-60 w-60 flex-col items-center justify-center rounded-md bg-slate-200">
             <VideoIcon className="h-10 w-10 text-slate-500" />
             <p className="text-xs text-slate-500">No video found</p>
           </div>
         ) : (
           <div className="relative aspect-video h-80 border">
-            <video
-              src={initialData.videoUrl}
+            {
+              //TODO: Replace with HLS PLAYER
+            }
+            {/* <video
+              src={initialData.}
               className="h-full w-full object-contain"
               controls={true}
-            ></video>
+            ></video> */}
           </div>
         )
       ) : (

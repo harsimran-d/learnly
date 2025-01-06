@@ -63,11 +63,12 @@ const ChapterPlayer = async ({
   return (
     <>
       <div className="aspect-video w-full p-6">
-        {chapter?.videoUrl && (
+        {/* {chapter?.videoUrl && (
+        //TODO: Replace with HLS Player
           <video className="h-full w-full object-contain" controls={true}>
             <source src={chapter?.videoUrl} />
           </video>
-        )}
+        )} */}
       </div>
     </>
   );
