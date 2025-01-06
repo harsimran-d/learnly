@@ -19,12 +19,18 @@ export default async function Browse() {
     );
   }
   return (
-    <div className="p-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+    <div className="max-w-6xl p-6">
+      <div className="grid grid-cols-1 items-center justify-center sm:grid-cols-2 md:grid-cols-3">
         {courses.map((course) => {
           return (
-            <Link key={course.id} href={`/browse/course/${course.id}`}>
-              <div className="max-w-min rounded-lg bg-slate-50 shadow-lg">
+            <div
+              key={course.id}
+              className="max-w-min items-center justify-center rounded-lg bg-slate-50 shadow-lg"
+            >
+              <Link
+                href={`/browse/course/${course.id}`}
+                className="m-auto flex flex-col justify-center"
+              >
                 {course.imageURL == "" ? (
                   <div className="flex h-60 w-80 items-center justify-center rounded-md bg-slate-200">
                     <ImageIcon className="h-10 w-10 text-slate-500" />
@@ -50,8 +56,8 @@ export default async function Browse() {
                     {course.description}
                   </p>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           );
         })}
       </div>

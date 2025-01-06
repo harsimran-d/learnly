@@ -1,5 +1,8 @@
+import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
 import db from "@/lib/db";
+import { ArrowRight, Lock } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 const ChapterPlayer = async ({
@@ -36,7 +39,25 @@ const ChapterPlayer = async ({
   }
 
   if (!chapter?.isFree && !userEnrolled) {
-    redirect(`/enroll/${courseId}`);
+    return (
+      <div className="flex h-2/3 w-full items-center justify-center">
+        <div className="h-120 w-200 flex flex-col items-center justify-center space-y-2 rounded-lg bg-blue-200 p-20">
+          <Lock size={48} />
+          <h1 className="text-2xl font-medium">Content Locked</h1>
+          <p>
+            To get access to this lesson, you&apos;ll need to purchase the
+            course
+          </p>
+          <div className="h-2"></div>
+          <Link href={`/enroll/${courseId}`}>
+            <Button size={"xl"}>
+              Buy Now
+              <ArrowRight />
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
