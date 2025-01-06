@@ -31,6 +31,9 @@ const EditChapter = async ({
         teacherId: session.user.id,
       },
     },
+    include: {
+      video: true,
+    },
   });
   if (!chapter) {
     return <div>Chapter not found</div>;
@@ -39,7 +42,7 @@ const EditChapter = async ({
     chapter.title,
     chapter.description,
     chapter.imageUrl,
-    chapter.videoUrl || chapter.notionDoc,
+    chapter.video?.status == "DONE" || chapter.notionDoc,
   ];
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
@@ -114,7 +117,7 @@ const EditChapter = async ({
                 </div>
                 <VideoUploadForm
                   courseId={chapter.courseId}
-                  initialData={{ videoUrl: chapter.videoUrl || "" }}
+                  initialData={{ video: chapter.video }}
                   chapterId={chapter.id}
                 />
               </div>
