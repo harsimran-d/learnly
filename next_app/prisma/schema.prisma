@@ -63,7 +63,7 @@ model Chapter {
   sequence    Int
   isFree      Boolean       @default(false)
   description String?
-  videoUrl    String?
+  video       Video?
   imageUrl    String?
   notionDoc   String?
   status      PublishStatus @default(DRAFT)
@@ -75,6 +75,26 @@ model Chapter {
   UserChapterProgress UserChapterProgress[]
 
   @@index([courseId, sequence])
+}
+
+model Video {
+  videoId       String      @id @default(cuid())
+  chapterId     String      @unique
+  status        VideoStatus @default(PENDING)
+  rawUrl        String?
+  masterUrl     String?
+  pendingRawUrl String?
+  chapter       Chapter     @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum VideoStatus {
+  PENDING
+  UPLOADED
+  PROCESSING
+  DONE
 }
 
 model Enrollment {
