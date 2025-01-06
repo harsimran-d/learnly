@@ -78,7 +78,8 @@ export async function POST(
     );
   }
   const timestamp = Date.now();
-  const extension = fileType.split("/")[1];
+  const extension =
+    fileType === "video/quicktime" ? "mov" : fileType.split("/")[1];
   const fileName = `uploads/course-${courseId}/chapter-${chapterId}/video-${timestamp}.${extension}`;
   try {
     const command = new PutObjectCommand({
