@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-import { Video } from "@prisma/client";
+import { Video } from "@/lib/db";
 import axios from "axios";
 import { PencilIcon, PlusCircleIcon, VideoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";

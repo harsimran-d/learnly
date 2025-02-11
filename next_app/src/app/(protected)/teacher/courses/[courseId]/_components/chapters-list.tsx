@@ -7,7 +7,7 @@ import type {
   DropResult,
 } from "@hello-pangea/dnd";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import { $Enums } from "@prisma/client";
+import { PublishStatus } from "@/lib/db";
 import axios from "axios";
 import { Grip, Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -20,14 +20,14 @@ interface ChaptersListProps {
     chapters: {
       id: string;
       title: string;
-      status: $Enums.PublishStatus;
+      status: PublishStatus;
       sequence: number;
       isFree: boolean;
     }[];
   };
 }
 
-const getStatusClasses = (status: $Enums.PublishStatus) => {
+const getStatusClasses = (status: PublishStatus) => {
   switch (status) {
     case "DRAFT":
       return "bg-blue-200 text-blue-700";

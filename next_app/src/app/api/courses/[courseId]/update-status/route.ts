@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import db from "@/lib/db";
-import { PublishStatus } from "@prisma/client";
+import { PublishStatus } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export const POST = async (

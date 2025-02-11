@@ -1,14 +1,8 @@
-import { PrismaClient } from "@prisma/client";
-declare const globalThis: {
-  prismaClient: PrismaClient | undefined;
-};
+import { prisma, Prisma, PublishStatus } from "db";
 
-const getPrismaClient = () => {
-  return new PrismaClient();
-};
-
-const prisma = globalThis.prismaClient ?? getPrismaClient();
-
+export type Course = Prisma.CourseGetPayload<object>;
+export type Chapter = Prisma.ChapterGetPayload<object>;
+export type UserChapterProgress = Prisma.UserChapterProgressGetPayload<object>;
+export type Video = Prisma.VideoGetPayload<object>;
+export { PublishStatus };
 export default prisma;
-
-if (process.env.NODE_ENV !== "production") globalThis.prismaClient = prisma;

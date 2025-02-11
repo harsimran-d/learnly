@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Chapter } from "@prisma/client";
+import { Chapter } from "@/lib/db";
 import { CircleCheck, Lock, Play } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 

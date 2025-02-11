@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Course } from "@prisma/client";
+import { Course } from "@/lib/db";
 import Link from "next/link";
 
 const ListItem = ({ course }: { course: Course }) => {

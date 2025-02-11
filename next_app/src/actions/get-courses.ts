@@ -1,7 +1,6 @@
 "use server";
 
-import db from "@/lib/db";
-import { Course } from "@prisma/client";
+import db, { Course } from "@/lib/db";
 
 export const getCourses = async (): Promise<Course[]> => {
   try {

@@ -1,4 +1,4 @@
-import { Chapter, Course, UserChapterProgress } from "@prisma/client";
+import { Chapter, Course, UserChapterProgress } from "@/lib/db";
 import SidebarItem from "./sidebar-item";
 
 const CourseSidebar = ({

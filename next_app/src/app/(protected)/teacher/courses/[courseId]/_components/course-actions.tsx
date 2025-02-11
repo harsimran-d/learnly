@@ -1,7 +1,7 @@
 "use client";
 import ConfirmModal from "@/components/modals/confirm-modal";
 import { Button } from "@/components/ui/button";
-import { PublishStatus } from "@prisma/client";
+import { PublishStatus } from "@/lib/db";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";

@@ -1,4 +1,4 @@
-import { Course } from "@prisma/client";
+import { Course } from "@/lib/db";
 import ListItem from "./list-item";
 
 const CoursesList = ({ courses }: { courses: Course[] }) => {
