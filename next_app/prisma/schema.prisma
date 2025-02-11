@@ -64,6 +64,7 @@ model Chapter {
   sequence    Int
   isFree      Boolean       @default(false)
   description String?
+  videoId     String?
   video       Video?
   imageUrl    String?
   notionDoc   String?
@@ -79,13 +80,13 @@ model Chapter {
 }
 
 model Video {
-  videoId       String      @id @default(cuid())
-  chapterId     String      @unique
+  id            String      @id @default(cuid())
   status        VideoStatus @default(PENDING)
   rawUrl        String?
   masterUrl     String?
   pendingRawUrl String?
-  chapter       Chapter     @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  chapterId     String      @unique
+  chapter       Chapter     @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
