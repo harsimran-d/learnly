@@ -1,3 +1,4 @@
 packages:
   - db
   - next_app
+  - video_processor
