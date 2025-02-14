@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  nextjs:
+    image: next-app
+    env_file:
+      - next_app/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - video_processor
+    networks:
+      - internal
+  video_processor:
+    image: video-processor
+    env_file:
+      - video_processor/.env
+    expose:
+      - "4000"
+    networks:
+      - internal
+networks:
+  internal:
+    driver: bridge
