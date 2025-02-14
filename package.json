@@ -1,0 +1,13 @@
+{
+  "name": "learnly",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"cd next_app && pnpm dev\" \"cd video_processor && pnpm run dev\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

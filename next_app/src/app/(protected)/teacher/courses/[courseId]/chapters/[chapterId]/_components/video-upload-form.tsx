@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
+import VideoPlayer from "@/components/video/VideoPlayer";
 import { Video } from "@/lib/db";
 import axios from "axios";
 import { PencilIcon, PlusCircleIcon, VideoIcon } from "lucide-react";
@@ -90,14 +91,9 @@ const VideoUploadForm = ({
           </div>
         ) : (
           <div className="relative aspect-video h-80 border">
-            {
-              //TODO: Replace with HLS PLAYER
-            }
-            {/* <video
-              src={initialData.}
-              className="h-full w-full object-contain"
-              controls={true}
-            ></video> */}
+            {initialData.video.masterUrl && (
+              <VideoPlayer src={initialData.video.masterUrl} />
+            )}
           </div>
         )
       ) : (

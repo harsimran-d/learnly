@@ -5,6 +5,7 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import axios from "axios";
 import { NextResponse } from "next/server";
 
 const s3Client = new S3Client({
@@ -47,8 +48,13 @@ export async function PUT(
         },
       });
 
-      // TODO: Also here should push to the processing queue
-
+      const processResponse = await axios.post(
+        process.env.NEXT_PUBLIC_BASE_URL! + "/video-api/process",
+        {
+          videoId: oldVideo.id,
+        },
+      );
+      console.log(processResponse.data);
       return NextResponse.json(
         { message: "Video URL Stored successfully" },
         { status: 200 },
