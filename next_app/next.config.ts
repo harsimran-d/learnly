@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  rewrites: async () => {
+    return [
+      {
+        source: "/video-api/:path*",
+        destination: "http://localhost:4000/video-api/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

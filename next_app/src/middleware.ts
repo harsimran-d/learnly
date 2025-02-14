@@ -7,8 +7,10 @@ import {
 } from "./routes";
 
 import authConfig, { CustomUser } from "./auth.config";
+import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
 
-export default NextAuth(authConfig).auth((req) => {
+export default NextAuth(authConfig).auth(async (req) => {
   const { nextUrl } = req;
 
   const isLoggedIn = !!req.auth;
@@ -18,6 +20,16 @@ export default NextAuth(authConfig).auth((req) => {
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+
+  if (nextUrl.pathname.startsWith("/video-api")) {
+    const secret = process.env.AUTH_SECRET;
+    const token = await getToken({ req, secret });
+    const res = NextResponse.next();
+    if (token) {
+      res.headers.set("x-user-id", token.sub || "");
+    }
+    return res;
+  }
 
   if (isApiAuthRoute) {
     return undefined;
