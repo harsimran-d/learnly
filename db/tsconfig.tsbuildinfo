@@ -1,0 +1,1 @@
+{"root":["./generated/client/default.d.ts","./generated/client/edge.d.ts","./generated/client/index.d.ts","./generated/client/wasm.d.ts","./generated/client/runtime/index-browser.d.ts","./generated/client/runtime/library.d.ts","./src/index.ts"],"version":"5.7.3"}

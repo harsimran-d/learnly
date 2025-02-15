@@ -1,4 +1,4 @@
-FROM node:lts-alpine  AS build
+FROM node:lts-alpine
 
 WORKDIR /app
 
@@ -7,9 +7,11 @@ COPY ../db ./db
 COPY ../video_processor ./video_processor
 
 RUN npm install -g pnpm && pnpm install --frozen-lockfile
+WORKDIR /app/db
+RUN  pnpm prisma generate && pnpm build
 WORKDIR /app/video_processor
 RUN pnpm build
 
 EXPOSE 4000
 
-CMD ["node", "video_processor/dist/index.js"]
+CMD ["node", "dist/index.js"]
