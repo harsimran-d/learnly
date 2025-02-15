@@ -1,0 +1,23 @@
+name: Check if the project builds
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        name: Set up Node.js
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install all dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build the db
+        run: cd db && pnpm prisma generate && pnpm build
+      - name: Build the video processor
+        run: cd video_processor && pnpm build
+      - name: Build the next app
+        run: cd next_app && pnpm build
