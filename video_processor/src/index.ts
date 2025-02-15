@@ -14,6 +14,11 @@ import {
 
 import "dotenv/config";
 
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const s3Client = new S3Client({
   region: process.env.AWS_REGION!,
   credentials: {
@@ -39,6 +44,12 @@ app.post("/video-api/process", authMiddleware, async (req, res) => {
   res.status(200).json({ message: "Video processing started", videoId });
 });
 async function processVideo(videoId: string) {
+  const tmpDir = path.join(__dirname, "tmp");
+
+  if (!fs.existsSync(tmpDir)) {
+    fs.mkdirSync(tmpDir, { recursive: true });
+  }
+
   try {
     // Fetch video metadata from Prisma
     const video = await prisma.video.findUnique({ where: { id: videoId } });

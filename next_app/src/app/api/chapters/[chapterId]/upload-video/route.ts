@@ -53,6 +53,12 @@ export async function PUT(
         {
           videoId: oldVideo.id,
         },
+        {
+          headers: {
+            Cookie: req.headers.get("cookie") || "",
+          },
+          withCredentials: true,
+        },
       );
       console.log(processResponse.data);
       return NextResponse.json(
