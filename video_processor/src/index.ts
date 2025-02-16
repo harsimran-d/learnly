@@ -4,7 +4,7 @@ import path from "path";
 import fs from "fs";
 import util from "util";
 import { pipeline, Readable } from "stream";
-import { authMiddleware } from "./middleware/auth";
+import { authMiddleware } from "./middleware/auth.ts";
 import { prisma } from "db";
 import {
   S3Client,

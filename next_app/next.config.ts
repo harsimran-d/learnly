@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/video-api/:path*",
-        destination: "http://localhost:4000/video-api/:path*",
+        destination: "http://video_processor:4000/video-api/:path*",
       },
     ];
   },
