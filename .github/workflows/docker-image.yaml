@@ -39,4 +39,4 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/next-app:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/video-processor:latest
             sudo docker-compose -f ./app/docker-compose.yml down
-            docker-compose -f ./app/docker-compose.yml up -d
+            sudo docker-compose -f ./app/docker-compose.yml up -d
