@@ -1,4 +1,8 @@
-import { PrismaClient, Prisma, PublishStatus } from "../generated/client";
+import {
+  PrismaClient,
+  Prisma,
+  PublishStatus,
+} from "../generated/client/index.js";
 
 declare global {
   var prisma: PrismaClient | undefined;
