@@ -29,3 +29,14 @@ jobs:
           file: ./video_processor/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/video-processor:latest
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/next-app:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/video-processor:latest
+            sudo docker-compose -f ./app/docker-compose.yml down
+            docker-compose -f ./app/docker-compose.yml up -d
