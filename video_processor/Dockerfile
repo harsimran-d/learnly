@@ -1,5 +1,5 @@
 FROM node:lts-alpine
-
+RUN apk add --no-cache ffmpeg
 WORKDIR /app
 
 COPY ../pnpm-lock.yaml ../pnpm-workspace.yaml ./
