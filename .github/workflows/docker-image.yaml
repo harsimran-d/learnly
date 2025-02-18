@@ -39,4 +39,7 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/next-app:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/video-processor:latest
             sudo docker-compose -f ./app/docker-compose.yml down
-            sudo docker-compose -f ./app/docker-compose.yml up -d
+            sudo docker stop $(sudo docker ps -q)
+            sudo docker rm $(sudo docker ps -aq)
+            sudo docker-compose -f ./app/docker-compose.yml up -d --force-recreate --no-deps
+            sudo docker image prune -a -f
