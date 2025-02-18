@@ -9,7 +9,9 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "allowJs": true,
-    "declaration": false,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": false,
     "noEmitOnError": false,
     "rewriteRelativeImportExtensions": true
   },
