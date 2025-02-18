@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getCourses } from "@/actions/get-courses";
 import { formatPrice } from "@/lib/format";
 import { ImageIcon, SearchX } from "lucide-react";
