@@ -4,7 +4,7 @@ import { Suspense } from "react";
 const LoginPage = () => {
   return (
     <Suspense>
-      <LoginForm />;
+      <LoginForm />
     </Suspense>
   );
 };

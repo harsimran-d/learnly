@@ -1,4 +1,5 @@
-import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/providers/theme-provider";
+import { ToasterProvider } from "@/providers/toaster-provider";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 
@@ -13,10 +14,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        {children}
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <ToasterProvider />
+        </ThemeProvider>
       </body>
     </html>
   );
