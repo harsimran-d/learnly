@@ -15,7 +15,11 @@ export default async function CourseInfo({
       id: courseId,
     },
     include: {
-      chapters: {},
+      chapters: {
+        where: {
+          status: "PUBLISHED",
+        },
+      },
     },
   });
   if (!course) {

@@ -24,11 +24,7 @@ const VideoPlayer = ({ src }: VideoPlayerProps) => {
   }, [src]);
 
   return (
-    <video
-      ref={videoRef}
-      controls
-      className="w-full max-w-2xl rounded-lg shadow-lg"
-    />
+    <video ref={videoRef} controls className="w-full rounded-lg shadow-lg" />
   );
 };
 
